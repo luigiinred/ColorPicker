@@ -30,9 +30,15 @@ interface Color {
 }
 
 const styles = StyleSheet.create({
-  header:{
-    fontSize:20,
-    fontWeight:'bold'
+  header: {
+    fontSize: 20,
+    fontWeight: "bold",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.4,
+    shadowRadius: 1,
   },
   container: {
     flex: 1,
@@ -109,12 +115,6 @@ void main() {
 
 export default ({ navigation }) => {
 
-  useEffect(() =>{
-    navigation.setOptions({
-      headerTitle: () => <Animated.Text style={[styles.header,{color:backgroundColor}]}>New Color</Animated.Text>,
-    });
-  },[])
-
   const defaultColors = [
     {
       backgroundColor: 4282056500,
@@ -161,6 +161,17 @@ export default ({ navigation }) => {
   const v = new Value(color.v);
   const translation = vec.createValue(0, 0);
   const backgroundColor = hsv2color(h, s, v);
+  
+  useEffect(() => {
+    navigation.setOptions({
+      headerTitle: () => (
+        <Animated.Text style={[styles.shadow,styles.header, { color: backgroundColor }]}>
+          New Color
+        </Animated.Text>
+      ),
+    });
+  }, [backgroundColor]);
+
 
   const updateColor = (colorChanges: Partial<Color>) => {
     setColor({ ...color, ...colorChanges });
@@ -217,6 +228,7 @@ export default ({ navigation }) => {
       extrapolate: Extrapolate.CLAMP,
     }
   );
+
   return (
     <View style={styles.container}>
       <View
